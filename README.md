@@ -9,9 +9,9 @@ This repository contains the binarized Dense/Conv2D ops develoepd by @jwfromm fo
 
 There are two ways to build these custom ops:
 
-* If you are developing on TensorFlow itself, you can mount this repository within the TensorFlow source tree and use `bazel` to build the ops.  Mount this repository at a location such as `<tensorflow root>/tensorflow/core/user_ops/BinOps`, then run `./tensorflow/core/user_ops/BinOps/bazel_build_command.sh` to invoke `bazel` to build the necessary libraries.
+* If you are developing on TensorFlow itself, you can mount this repository within the TensorFlow source tree and use `bazel` to build the ops.  Mount this repository at a location such as `<tensorflow root>/tensorflow/core/user_ops/BinOps`, then run `./tensorflow/core/user_ops/BinOps/bazel_build_command.sh` to invoke `bazel` to build the necessary libraries.  The libraries will be placed within the `bazel-bin` directory that `bazel` creates within the TensorFlow directory.
 
-* If you have TensorFlow already installed through something like `pip`, use `./gcc_build_command.sh` to build the libraries.
+* If you have TensorFlow already installed through something like `pip`, use `./gcc_build_command.sh` to build the libraries.  The libraries will be placed within this directory.
 
 Once the `.so` libraries are built, install them into `/usr/local/lib` and run `sudo ldconfig`.  You can then place the python files `binarize_layers.py` and `binarize_ops.py` wherever is convenient for python to pick them up from your own code.
 
