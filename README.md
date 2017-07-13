@@ -1,6 +1,8 @@
 TensorFlow Binarize Ops
 =======================
 
+[![Build Status](https://travis-ci.org/jwfromm/BinOps.svg?branch=master)](https://travis-ci.org/jwfromm/BinOps)
+
 This repository contains the binarized Dense/Conv2D ops develoepd by @jwfromm for TensorFlow and Keras.
 
 ## Building
