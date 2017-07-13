@@ -3,8 +3,8 @@ services:
   - docker
 language: c
 
-environment:
-  # We test only CPU kernels on Travis.  Sad face.
+# We test only CPU kernels on Travis.  Sad face.
+env:
   - DOCKER_IMG=tensorflow/tensorflow:nightly-devel-py3
   - DOCKER_IMG=tensorflow/tensorflow:latest-devel-py3
   - DOCKER_IMG=tensorflow/tensorflow:1.2.1-devel-py3
