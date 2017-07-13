@@ -28,3 +28,5 @@ nvidia-docker run -ti -v $(pwd):/src -w /src tensorflow/tensorflow:latest-devel-
 ```
 
 Of course, if you don't want to use docker and instead just want to run the tests directly on your host system, you can do so simply by running `./run_tests.sh`.
+
+
