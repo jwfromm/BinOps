@@ -2,12 +2,14 @@
 
 # These commands will build libbinarize.so and libmultibit.so, assuming that
 # TensorFlow is already installed and g++/nvcc are available on your system
-TF_INC=$(python -c 'import tensorflow as tf; print(tf.sysconfig.get_include())' 2>/dev/null)
-if [ ! -d "$TF_INC" ]; then
-    TF_INC=$(python3 -c 'import tensorflow as tf; print(tf.sysconfig.get_include())' 2>/dev/null)
+if [ -z "$TF_INC" ]; then
+    TF_INC=$(python -c 'import tensorflow as tf; print(tf.sysconfig.get_include())' 2>/dev/null)
     if [ ! -d "$TF_INC" ]; then
-        echo "ERROR: Could not auto-discover TF_INC; is TensorFlow actually installed?"
-        exit 1
+        TF_INC=$(python3 -c 'import tensorflow as tf; print(tf.sysconfig.get_include())' 2>/dev/null)
+        if [ ! -d "$TF_INC" ]; then
+            echo "ERROR: Could not auto-discover TF_INC; is TensorFlow actually installed?"
+            exit 1
+        fi
     fi
 fi
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
