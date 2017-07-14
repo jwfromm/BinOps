@@ -30,6 +30,26 @@ __device__ int64 atomicAdd(int64 * address, int64 val) {
     return (int64) atomicAdd((unsigned long long int *)address, (unsigned long long int)val);
 }
 
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ < 600
+// CUDA doesn't support atomicAdd() on double's on compute capability < 6.0, so
+// we simulate it, using code from the NVidia CUDA toolkit docs:
+// http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#atomic-functions
+// Note that this is SLOW, but that's better than not compiling on some archs.
+__device__ double atomicAdd(double* address, double val)
+{
+    unsigned long long int* address_as_ull = (unsigned long long int*)address;
+    unsigned long long int old = *address_as_ull, assumed;
+    do {
+        assumed = old;
+        old = atomicCAS(address_as_ull, assumed,
+                        __double_as_longlong(val +
+                        __longlong_as_double(assumed)));
+    } while (assumed != old);
+    return __longlong_as_double(old);
+}
+#endif
+
+
 
 template <typename T>
 __global__ void bitUpdateKernel(const int size, const int bitindex, const int *bit_map, T* in, T* out, T* hot_sum, int* valid_count) {
@@ -51,7 +71,7 @@ template <typename T>
 __global__ void bitMeanKernel(const int size, const int bitindex, const int *bit_map, const T* in, T* hot_sum, int* valid_count) {
     for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < size; i += blockDim.x * gridDim.x) {
         if (bit_map[i] > bitindex) {
-            float val = GPU_absKernel<T>(in[i]);
+            T val = GPU_absKernel<T>(in[i]);
             atomicAdd(hot_sum, val);
             atomicAdd(valid_count, 1);
         }
